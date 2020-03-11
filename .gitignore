@@ -5,8 +5,6 @@
 /.settings
 logs/*
 src/logs/*
-dataset/*
-checkpoint/*
 .DS_Store
 node_modules
 /dist
