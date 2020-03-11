@@ -126,7 +126,7 @@ export default {
             let [mapName, level, allTime] = [tab.mapName, tab.level, tab.allTime];
             if (tab.data) return $this.drawGraph(tab);
             
-            let key = allTime ? API.GetTimeData : API.GetDataDetails;
+            let key =API.GetDataDetails;  //allTime ? API.GetTimeData : 
             Utils.ajaxData(key, {'level': level, 'name': mapName}, function (rst) {
                 tab.data = rst.data;
                 $this.drawGraph(tab, rst.data);

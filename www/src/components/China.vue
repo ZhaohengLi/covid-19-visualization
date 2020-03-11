@@ -29,7 +29,7 @@ export default {
             updateTime: '2020.02.15 02:29',
             sums: [
                 {name: 'confirmed', text: '确诊', color: Utils.Colors[0], sum: 63951, add: "+19"},
-                {name: 'suspected', text: '疑似', color: Utils.Colors[1], sum: 8228 , add: ""},
+                {name: 'suspected', text: '疑似', color: Utils.Colors[1], sum: 8228 , add: "+10"},
                 {name: 'die', text: '死亡', color: Utils.Colors[2], sum: 1382 , add: "+1"},
                 {name: 'ok', text: '治愈', color: Utils.Colors[3], sum: 7094, add: "+366"}
             ],

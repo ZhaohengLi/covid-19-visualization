@@ -89,5 +89,5 @@ def get_map():
     
 if __name__ == '__main__':
     L.info("Server Start...")
-    app.run(port=C.web.PORT)
+    app.run(host="0.0.0.0",port=C.web.PORT)
     
