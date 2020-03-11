@@ -1,7 +1,7 @@
 #coding:utf8
 
 class Mysql():
-    HOST = "10.101.1.119"
+    #HOST = "10.101.1.119"
     HOST = "localhost"
     PORT = 3306
     DB_NAME = "epidemic"
@@ -10,8 +10,8 @@ class Mysql():
     TB_NAME = "patients"
     POOL_SIZE = 3
 
-    HOST = "106.54.48.46"
-    PASSWORD = ""
+    #HOST = "106.54.48.46"
+    #PASSWORD = ""
     
 class Web():        
     PORT = 9400

@@ -40,7 +40,7 @@ class Database(object):
         '''检查是否初始化'''
         if not Database.pool:
             Database.pool = PooledDB(mysql.connector, cfg.POOL_SIZE, host=cfg.HOST, port=cfg.PORT, 
-                    user=cfg.USER_NAME, passwd=cfg.PASSWORD, db=cfg.DB_NAME, use_unicode=True, charset='utf8')
+                    user=cfg.USER_NAME, passwd=cfg.PASSWORD, db=cfg.DB_NAME, use_unicode=True, charset='utf8', auth_plugin='mysql_native_password')
         cnx = None
         try:
             cnx = Database.pool.connection()
