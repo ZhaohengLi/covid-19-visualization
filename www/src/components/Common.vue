@@ -44,7 +44,13 @@
                     </el-col>
                 </el-row>
                 <!-- 曲线分析 -->
-                <el-row v-else v-show="activeName==c.name">
+                <el-row v-else-if="i=4" v-show="activeName==c.name">
+                    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+                        <div :id="c.ids[0]" class="chart" style="height: 500px"></div>
+                    </el-col>
+                </el-row>
+                <!-- 舆情-->
+                <el-row v-else v-show="1==1">
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                         <div :id="c.ids[0]" class="chart" style="height: 500px"></div>
                     </el-col>

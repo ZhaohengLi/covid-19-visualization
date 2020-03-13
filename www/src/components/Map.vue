@@ -1,28 +1,10 @@
 <template>
     <div id="root">
-        <div id="map" style="height: 100%">地图</div>
-        <div style="position: fixed; right: 10px; top: 160px; width: 100px; ">
-              <el-select v-model="currentProvince" size="small" placeholder="请选择" @change="loadProvince">
-                <el-option
-                v-for="item in provinces"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code">
-                </el-option>
-            </el-select>
-        </div>
 
-        <div style="position: fixed; right: 10px; top: 120px; width: 100px">
-              <el-select v-model="mapIndex" size="small" placeholder="请选择" @change="resetMap">
-                <el-option
-                v-for="item in maps"
-                :key="item.index"
-                :label="item.label"
-                :value="item.index">
-                </el-option>
-            </el-select>
-        </div>
 
+<template>
+  <light-timeline :items='items'></light-timeline>
+</template>
         <div style="position: fixed; right: 10px; top: 90px; font-weight: 400; font-family: 宋体;  " class="blink">
             <router-link to="/china">返回</router-link>
         </div>
@@ -39,23 +21,25 @@ import {loadBuilding} from "../js/building";
 import {loadLines3D} from "../js/lines3D";
 import { Utils } from '../js/utils';
 
+ 
+
 export default {
     name: 'Map',
     data () {
-        return {
-            map: null,
-            planeLayer: null,
-            buildingLayer: null,
-            currentProvince: "510000",
-            currentCity: "",
-            data: null,
-            maps: [
-                {label: '常规地图', map: 'Gaode', type: '0', index: 0}, 
-                {label: '暗黑2.5D', map: 'Gaode', type: '1', index: 1}, 
-                {label: '3D场景', map: 'Gaode', type: '1', index: 2}],
-            mapIndex: 1,
-            provinces: Object.keys(Provinces).map(k => ({code: k, name: Provinces[k].name}))
-        };
+
+    return {
+      items: [
+        {
+          tag: '2019-02-12',
+          content: '据人民银行营业管理部介绍,截至3月11日,北京市12家银行已向疫情防控重点企业发放优惠利率贷款306笔,其中中小微企业占比超七成,贷款平均利率2.7%'
+        },
+        {
+          tag: '2019-02-13',
+          type: 'circle',
+          content: '2020年2月12日电,近日,北京市新冠肺炎疫情防控工作新闻发布会上表示,北京市药监局督促药店对购买治疗发热、咳嗽类药品的顾客进行实名登记。'
+        }
+      ]
+};
     },
     mounted () {
         this.mapIndex = parseInt(Utils.getCookie("mapIndex", 1));

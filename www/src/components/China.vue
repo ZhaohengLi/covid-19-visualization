@@ -6,7 +6,7 @@
     
     </el-main>
     <div style="position: fixed; right: 10px; top: 90px; font-weight: 400; font-family: 宋体 " class="blink">
-        <router-link to="/map">疫情小区</router-link>
+        <router-link to="/map">谣言判断器</router-link>
     </div>
     
   </div>
@@ -39,19 +39,23 @@ export default {
                     allTime: 0, data: null, mapName: 'china'
                 },
                 {
-                    label: "时间序列回放", name: 'chinaTime', ids: ['ecChinaTime', 'ecBarTime1'], level: 1, 
+                    label: "省舆情回放", name: 'chinaTime', ids: ['ecChinaTime', 'ecBarTime1'], level: 1, 
                     allTime: 1, data: null, mapName: "china"
                 },
                 {
-                    label: "省实时疫情", name: 'province', ids: ['ecProvince', 'ecBar2'], level: 2, 
+                    label: "省区实时疫情", name: 'province', ids: ['ecProvince', 'ecBar2'], level: 2, 
                     allTime: 0, data: null, mapName: "420000"
                 },
                 {
-                    label: "省舆情回放", name: 'provinceTime', ids: ['ecProvinceTime', 'ecBarTime2'], 
+                    label: "时间序列回放", name: 'provinceTime', ids: ['ecProvinceTime', 'ecBarTime2'], 
                     level: 2, allTime: 1, data: null, mapName: '420000'
                 }, 
                 {
                     label: "曲线分析", name: "lineChina", ids: ['ecLineChina'], level: 1, isLine: 1, 
+                    allTime: 1, data: null, mapName: "china"
+                },
+                {
+                    label: "政策舆情时间线", name: "NewsTime", ids: ['ecWordCloud'], level: 1,  isWord: 1,
                     allTime: 1, data: null, mapName: "china"
                 }
             ],
@@ -60,9 +64,9 @@ export default {
         }
     },
     mounted () {
-        Loader.init(this.title, this.updateTime, this.sums, this.tabs);
+        Loader.init(this.title, this.updateTime, this.sums, this.tabs);//this.title->国内确诊； this.update_time; this.sums->rough numbers; this.tabs 几个栏目
         [Loader.level, Loader.code] = [1, "86"];
-        Loader.loadSummary();
+        Loader.loadSummary(); //更新大致信息
         this.init();
     },
     methods: {

@@ -3,6 +3,7 @@ import {API} from "../js/server";
 import chartMap from "../js/mapChina";
 import chartBar from "../js/barChina";
 import chartLine from "../js/lineChina";
+import chartWord from "../js/wordChina";
 import Vue from 'vue'
 
 let Loader = {
@@ -18,8 +19,8 @@ let Loader = {
     },
     loadSummary () {
         let $this = this;
-        Utils.ajaxData(API.GetDataSummary, {'level': this.level, 'name': this.code}, function (rst) {
-            $this.updateTime = rst.data.updateTime;
+        Utils.ajaxData(API.GetDataSummary, {'level': this.level, 'name': this.code}, function (rst) { //update rough info(set by hand is just a start)
+            $this.updateTime = rst.data.updateTime; 
             let _sums = rst.data.summary;
             for (let i = 0; i < 4; i++) {
                 if (_sums[0][i]) Vue.set($this.sums[i], 'sum', _sums[0][i]);
@@ -48,6 +49,8 @@ let Loader = {
     loadData (tab) {
         let $this = this;
         let [mapName, level, allTime] = [tab.mapName, tab.level, tab.allTime];
+        console.log("---load_data---");
+        console.log(tab);
         if (tab.data) return $this.drawGraph(tab);
         
         let key = allTime ? API.GetTimeData : API.GetDataDetails;
@@ -68,7 +71,17 @@ let Loader = {
             });
             return;
         }
+    
+		if (tab.isWord){
+			console.log("WORD");
+	let ec = chartWord.initData(tab.ids[0]);
+            ec.on('click', function (p) {
+                console.log(p);
+            });
+				return;
+	}
         // 依次画两图
+        console.log("draw_chartmap");
         let ec = chartMap.initData(data, tab.ids[0], mapName, allTime);
         ec.off('click');
         ec.on('click', function (d) {
@@ -76,16 +89,23 @@ let Loader = {
             // TODO: 判断三级区域
             let cTab = $this.tabs[2 + allTime]; 
             [cTab.mapName, cTab.data] = [d.data.code, null];
+            console.log(cTab.name);
             $this.activeName = cTab.name;
             $this.loadMap(cTab);
         })
         let names = Utils.Names[mapName];
         chartBar.initData(data, tab.ids[1], names, allTime);
+
     },
     // 切换标签页
     handleClickTab: function (index) {
         let tab = this.tabs[index];
-        if (tab.isLine) return this.loadData(tab);
+                console.log("click_change");
+                console.log(index);
+        if (tab.isLine) {
+
+            return this.loadData(tab);
+        }
         this.loadMap(tab);
     }
 };
