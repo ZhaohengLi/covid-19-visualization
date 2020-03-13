@@ -15,6 +15,8 @@ from http import cookiejar
 from src.config import Config as C
 # import requests
 
+import ssl
+context = ssl._create_unverified_context()
 
 def get_cookie(url):
     cookie = cookiejar.CookieJar()
@@ -86,7 +88,7 @@ def request_url(url, text = False, param = {}):
         }
         data = bytes(parse.urlencode(param), encoding='utf-8') 
         req = request.Request(url, data=data, headers=headers, method='GET')
-        response = request.urlopen(req) 
+        response = request.urlopen(req, context=context) 
         rst = response.read()  
         res = str(rst, encoding="utf8")
 #         res = pq(res)

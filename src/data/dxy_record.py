@@ -8,6 +8,7 @@ sys.path.append('..')
 sys.path.append('../..')
 import json
 import time
+import traceback
 from src.libs.log import L
 from urllib import parse
 from src.common.tools import request_url
@@ -88,9 +89,10 @@ def request_data(url, name):
             rst = request_url(url)
             rst = json.loads(rst, encoding = "utf8")
             return rst
-        except:
+        except Exception as e:
             err_count += 1
             L.info("Error request found when {}, the {} times".format(name, err_count))
+            L.info("Due to {}".format(str(e)))
             if err_count > 10: return None
             time.sleep(3)
     return None
