@@ -65,6 +65,17 @@ def get_time_data():
     data = DC.get_time_data(level, int(code))
     return NormalResponseJson(request, data)
 
+@app.route('/getNewsData')
+def get_news_data():
+    pass
+    data = DC.get_news_data()
+    return NormalResponseJson(request, data)
+
+@app.route('/getRumorData')
+def get_rumor_data():
+    data = DC.get_rumor_data()
+    return NormalResponseJson(request, data)
+
 @app.route('/getDataPos')
 def get_data_pos():
     R = request.form if request.method=='POST' else request.args
@@ -89,5 +100,5 @@ def get_map():
     
 if __name__ == '__main__':
     L.info("Server Start...")
-    app.run(host="0.0.0.0",port=C.web.PORT)
+    app.run(host="0.0.0.0",port=C.web.PORT, debug=True)
     

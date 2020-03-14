@@ -78,6 +78,23 @@ class Database(object):
         cnx.close()
         return result
 
+    def selectDict(self, sql, params = (), cursor = None):
+        if cursor==None:
+            cnx = self.getConnection()
+            cursor = cnx.cursor()
+            self.lsCurs.append(cursor)
+        
+        cursor.execute(sql, params)
+
+        result = []
+        columns = [column[0] for column in cursor.description]
+        for row in cursor.fetchall():
+            result.append(dict(zip(columns, row)))
+
+        cursor.close()
+        cnx.close()
+        return result
+
     
     def selectPage(self, sql, params, page, size, cursor = None):
         sqlEx = "select count(*) from (" + sql + ") sc"

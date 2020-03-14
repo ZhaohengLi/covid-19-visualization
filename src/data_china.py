@@ -49,7 +49,18 @@ def get_data_summary(level=1, code=86):
         sums[1][i] = sums[0][i] - sums[1][i]
     
     return {"updateTime": update_time, "summary": sums}
-    
+
+def get_news_data():
+    db = Database()
+    sql = "select * from news"
+    news = db.selectDict(sql)
+    return news
+
+def get_rumor_data():
+    db = Database()
+    sql = "select * from rumor"
+    rumor = db.selectDict(sql)
+    return rumor
     
 '''
 Return: {
