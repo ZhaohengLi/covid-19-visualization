@@ -139,7 +139,7 @@ def request_data_overall():
     if not rst: return 
     data, lines = rst['results'], []
 
-def requset_rumor_data():
+def request_rumor_data():
     L.info("Collecting rumor data.")
     for i in range(0,3):
         request_rumor_type_data(i)
@@ -195,7 +195,7 @@ def request_rumor_type_data(rumor_type = 0):
         L.info("Collecting rumor data finished.")
 
 
-def requset_news_data():
+def request_news_data():
     L.info("Collecting news data.")
     error_times = 0
     db = Database()
@@ -248,7 +248,8 @@ def requset_news_data():
     
 if __name__ == '__main__':
     pass
-    requset_rumor_data()
+    request_rumor_data()
+    request_news_data()
     # test_get_data()
     # request_data_province()
     # request_data_overall()
