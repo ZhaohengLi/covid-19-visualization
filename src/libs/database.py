@@ -72,9 +72,12 @@ class Database(object):
             self.lsCurs.append(cursor)
         
         cursor.execute(sql, params)
-        
-        '''TODO: Python3此处cursor不可迭代，需要fetchall？'''
-        return cursor.fetchall()
+        result = cursor.fetchall()
+
+        cursor.close()
+        cnx.close()
+        return result
+
     
     def selectPage(self, sql, params, page, size, cursor = None):
         sqlEx = "select count(*) from (" + sql + ") sc"

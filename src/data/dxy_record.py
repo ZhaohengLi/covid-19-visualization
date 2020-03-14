@@ -138,11 +138,65 @@ def request_data_overall():
     rst = request_data(url, "全国")
     if not rst: return 
     data, lines = rst['results'], []
-   
+
+def request_rumor_data():
+    url = ""
+
+def requset_news_data():
+    L.info("Collecting news data.")
+    error_times = 0
+    db = Database()
+    url = "https://lab.isaaclin.cn/nCoV/api/news?num=50&page="
+    i = 0
+    while i < 100:
+        i += 1
+        L.info("Preparing for page {}".format(str(i)))
+
+        time.sleep(3)
+        rst = request_data(url+str(i), str(i))
+
+        if rst['success'] == False:
+            if error_times == 10 : break
+            error_times += 1
+            L.info("This is the {} times fail at getting page {}, will try it again.".format(str(error_times),str(i)))
+            i -= 1
+            continue
+        else:
+            error_times = 0
+
+        if not rst['results']:
+            L.info("Collecting news data finished.")
+            break
+
+        comands = []
+        for line in rst['results']:
+            ks = line.keys()
+            params = line['title']
+            sql = "select * from news where title ='{}'".format(params)
+            data = db.select(sql)
+            if not data:
+                sql = "insert into news (" + ','.join(ks) + ") values (" + ', '.join(['%s' for k in ks]) + ")"
+                params = [line[k] for k in ks]
+                comands.append([sql, params])
+        try:
+            db.Transaction(comands)
+            L.info("Writing database for {} news.".format(str(len(comands))))
+        except Exception as e:
+            if error_times == 10 : break
+            error_times += 1
+            L.info("This is the {} times fail at wirting database due to {}, will try this page again.".format(str(error_times), str(e)))
+            i -= 1
+            continue
+
+    if error_times == 10:
+        L.info("Collecting news data finished with error.")
+    else:
+        L.info("Collecting news data finished.")
     
 if __name__ == '__main__':
     pass
-#     test_get_data()
-    request_data_province()
-#     request_data_overall()
-#     add_city_code()
+    requset_news_data()
+    # test_get_data()
+    # request_data_province()
+    # request_data_overall()
+    # add_city_code()
