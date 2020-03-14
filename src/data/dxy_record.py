@@ -139,8 +139,61 @@ def request_data_overall():
     if not rst: return 
     data, lines = rst['results'], []
 
-def request_rumor_data():
-    url = ""
+def requset_rumor_data():
+    L.info("Collecting rumor data.")
+    for i in range(0,3):
+        request_rumor_type_data(i)
+
+def request_rumor_type_data(rumor_type = 0):
+    error_times = 0
+    db = Database()
+    i = 0
+    while i < 5:
+        i += 1
+        L.info("Preparing for type {} page {}".format(str(rumor_type), str(i)))
+
+        time.sleep(3)
+        rst = request_data("https://lab.isaaclin.cn/nCoV/api/rumors?num=50&rumorType={}&page={}".format(str(rumor_type), str(i)), str(i))
+
+        if rst['success'] == False:
+            if error_times == 10 : break
+            error_times += 1
+            L.info("This is the {} times fail at getting page {}, will try it again.".format(str(error_times),str(i)))
+            i -= 1
+            continue
+        else:
+            error_times = 0
+
+        if not rst['results']:
+            L.info("Collecting type {} rumor data finished.".format(rumor_type))
+            break
+
+        comands = []
+        for line in rst['results']:
+            ks = line.keys()
+            params = line['title']
+            sql = "select * from rumor where title ='{}'".format(params)
+            data = db.select(sql)
+
+            if not data:
+                sql = "insert into rumor (" + ','.join(ks) + ") values (" + ', '.join(['%s' for k in ks]) + ")"
+                params = [line[k] for k in ks]
+                comands.append([sql, params])
+        try:
+            db.Transaction(comands)
+            L.info("Writing database for {} rumor.".format(str(len(comands))))
+        except Exception as e:
+            if error_times == 10 : break
+            error_times += 1
+            L.info("This is the {} times fail at wirting database due to {}, will try this page again.".format(str(error_times), str(e)))
+            i -= 1
+            continue
+
+    if error_times == 10:
+        L.info("Collecting rumor data finished with error.")
+    else:
+        L.info("Collecting rumor data finished.")
+
 
 def requset_news_data():
     L.info("Collecting news data.")
@@ -195,7 +248,7 @@ def requset_news_data():
     
 if __name__ == '__main__':
     pass
-    requset_news_data()
+    requset_rumor_data()
     # test_get_data()
     # request_data_province()
     # request_data_overall()
