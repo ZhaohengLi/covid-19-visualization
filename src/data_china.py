@@ -56,9 +56,21 @@ def get_news_data():
     news = db.selectDict(sql)
     return news
 
+def get_news_data_example():
+    db = Database()
+    sql = "select * from news limit 0, 20"
+    news = db.selectDict(sql)
+    return news
+
 def get_rumor_data():
     db = Database()
     sql = "select * from rumor"
+    rumor = db.selectDict(sql)
+    return rumor
+
+def get_rumor_data_example():
+    db = Database()
+    sql = "select * from rumor limit 0, 20"
     rumor = db.selectDict(sql)
     return rumor
     
