@@ -15,9 +15,11 @@ from src.data.dxy_record import request_data_province
 def worker():
     try:
         request_data_province()
+        request_rumor_data()
+        request_news_data()
         L.info("Sleep now, worker will run after 30 minutes")
     except:
-        pass
+        L.info("Someting went wrong!")
         
 def run():
     while True:

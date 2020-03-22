@@ -251,6 +251,6 @@ if __name__ == '__main__':
     request_rumor_data()
     request_news_data()
     # test_get_data()
-    # request_data_province()
+    request_data_province()
     # request_data_overall()
     # add_city_code()
