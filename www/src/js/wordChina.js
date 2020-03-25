@@ -26,26 +26,8 @@ function getOption (srcData, _option) {
     _option.title.text = "热点舆论" 
     _option.series[0]['data'] = data;
     _option.series[0]['type']='wordCloud';
-        _option.series[1]['data'] = [[0,0]];
-    _option.series[1]['type']='scatter';
-    _option.series[1]['symbolSize']= 1;
-    _option.series[1]['label']={
-                normal: {
-                    show: true,
-   formatter: '{titleBg|截至2月2日18时，全国累计报告确诊病例}',
-rich: {
-    titleBg: {
-        align: 'right',
-        backgroundColor: '#eee',
-        height: 100,
-        borderRadius: [0, 0, 0, 0],
-        padding: [0, 0, 0, 0],
-        width: 2500,
-        color: '#000'
-    }},
 
-                }
-            }
+            
 
     return _option;
 }
@@ -54,22 +36,7 @@ function getOptions () {
     let tms = Object.keys(dts);
     superOption.baseOption.timeline.data = tms;
     superOption.options = tms.map(k => {
-        let _option = { title: {text: '', top: 55, textStyle: {color: '#bbb', fontSize: 16}}, series: [{},{}], xAxis: {
-        axisLabel: {show: false},
-        axisLine: {show: false},
-        splitLine: {show: false},
-        axisTick: {show: false},
-        min: 0,
-        max: 1
-    },
-    yAxis: {
-        axisLabel: {show: false},
-        axisLine: {show: false},
-        splitLine: {show: false},
-        axisTick: {show: false},
-        min: 0,
-        max: 1
-    }};
+        let _option = { title: {text: '', top: 55, textStyle: {color: '#bbb', fontSize: 16}}, series: [{}]};
         return getOption(dts[k], _option);
     });
 	superOption.baseOption.timeline.autoPlay = false;
@@ -92,14 +59,7 @@ function getOptions () {
 }
 
 chart.initData = function (id) {
-		console.log("cloud");
         let _option = getOptions();
-        console.log(_option);
-        console.log("option!");
-
-
-
-    
     chart.instance = Utils.drawGraph(_option, id);
     return chart.instance;
 };

@@ -2,11 +2,11 @@
   <div class="hello">
     <el-main>
         <Common :title="loader.title" :updateTime="loader.updateTime" :sums="loader.sums" :tabs="tabs" :activeName_="loader.activeName"
-        @handleClickTab="loader.handleClickTab($event)" />
+        @handleClickTab="click($event)" />
     
     </el-main>
     <div style="position: fixed; right: 10px; top: 90px; font-weight: 400; font-family: 宋体 " class="blink">
-        <router-link to="/map">谣言判断器</router-link>
+        <router-link to="/map">舆情谣言判断器</router-link>
     </div>
     
   </div>
@@ -16,7 +16,6 @@
 import Common from './Common.vue';
 import Loader from '../js/common.js'
 import {Utils} from "../js/utils";
-
 export default {
     name: 'Home',
     components: {Common},
@@ -68,8 +67,16 @@ export default {
         [Loader.level, Loader.code] = [1, "86"];
         Loader.loadSummary(); //更新大致信息
         this.init();
+console.log(this.$store.state);
+console.log("vuex!");
     },
     methods: {
+	click(index){
+if (index==5) this.$store.state.showFooter= true;
+else this.$store.state.showFooter=false;
+console.log("givechange"+this.$store.state.showFooter);
+Loader.handleClickTab(index);
+},
         init () {
             Loader.activeName = "lineChina";
             Loader.loadData(this.tabs[4]);
