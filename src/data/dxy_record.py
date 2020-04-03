@@ -132,6 +132,92 @@ def request_data_province():
         L.info("{}\t {}  finished!".format(idx, p['name']))
         time.sleep(3)
 
+
+def request_data_time_series():
+    needed = {}
+    for p in SP:
+        if p['name'] == '香港特别行政区':
+            needed['香港'] = p
+        if p['name'] == '澳门特别行政区':
+            needed['澳门'] = p
+        if p['name'] == '台湾省':
+            needed['台湾'] = p
+        needed[p['name']] = p
+    
+    # url = "https://raw.githubusercontent.com/BlankerL/DXY-COVID-19-Data/master/json/DXYArea-TimeSeries.json"
+    # data = request_data(url, "")
+    # if not data:
+    #     L.info('Get data from github fialed.')
+    #     return
+
+    with open('./json/data_time_series.json', 'r') as file:
+        data = json.load(file)
+
+    db = Database()
+    history = getLatest(db)
+    lines = []
+    for province in data:
+        if province["provinceName"] in needed:
+            p = needed[province["provinceName"]]
+            translate([province], p, lines)
+
+    comands = []
+    for line in lines:
+        '''排除已有历史数据''' 
+        key = '_'.join([str(line['region_code']), line['region_name'], str(line['region_parent'])])
+        if key in history and not date_less(history[key], line['data_date']):
+            continue
+        ks = line.keys()
+        sql = "insert into patients (" + ','.join(ks) + ") values (" + ', '.join(['%s' for k in ks]) + ")"
+        params = [line[k] for k in ks]
+        comands.append([sql, params])
+
+    L.info("New data lines count:" + str(len(comands)))
+    if len(comands) > 0:
+        db.Transaction(comands)
+
+
+def request_news_time_series():
+    with open('./json/news_time_series.json', 'r') as file:
+        data = json.load(file)
+
+    db = Database()
+    update_num = 0
+    for line in data:
+        key = ['id', 'provinceId', 'title', 'summary', 'infoSource', 'sourceUrl', 'pubDate']
+        data = db.select("select * from news where id={}".format(line['id']))
+        if not data:
+            update_num += 1
+            sql = "insert into news (" + ','.join(key) + ") values (" + ', '.join(['%s' for k in key]) + ")"
+            line['pubDate'] = TS2S(line['pubDate'] / 1000.0)
+            if line['provinceId'] == "":
+                line['provinceId'] = None
+            line['summary'] = line['summary'][0:4096]
+            params = [line[k] for k in key]
+            db.execute(sql, params)
+    L.info('Update {} news data.'.format(update_num))
+
+def request_rumor_time_series():
+    with open('./json/rumor_time_series.json', 'r') as file:
+        data = json.load(file)
+
+    db = Database()
+    update_num = 0
+    for line in data:
+        key = ['id', 'title', 'mainSummary', 'body', 'sourceUrl', 'rumorType', 'crawlTime']
+        data = db.select("select * from rumor where id={}".format(line['id']))
+        if not data:
+            update_num += 1
+            sql = "insert into rumor (" + ','.join(key) + ") values (" + ', '.join(['%s' for k in key]) + ")"
+            line['crawlTime'] = TS2S(line['crawlTime'] / 1000.0)
+            line['mainSummary'] = line['mainSummary'][0:1024]
+            line['body'] = line['body'][0:1024]
+            params = [line[k] for k in key]
+            db.execute(sql, params)
+    L.info('Update {} news data.'.format(update_num))
+
+
+
 '''暂未使用（本项目当前只关心国内）'''
 def request_data_overall():
     url = "https://lab.isaaclin.cn/nCoV/api/overall?latest=0"
@@ -141,7 +227,7 @@ def request_data_overall():
 
 def request_rumor_data():
     L.info("Collecting rumor data.")
-    for i in range(0,3):
+    for i in range(0, 3):
         request_rumor_type_data(i)
 
 def request_rumor_type_data(rumor_type = 0):
@@ -248,9 +334,12 @@ def request_news_data():
     
 if __name__ == '__main__':
     pass
-    request_rumor_data()
-    request_news_data()
+    request_data_time_series()
+    request_news_time_series()
+    request_rumor_time_series()
+    # request_rumor_data()
+    # request_news_data()
     # test_get_data()
-    request_data_province()
+    # request_data_province()
     # request_data_overall()
     # add_city_code()
