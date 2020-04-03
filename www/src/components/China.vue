@@ -1,13 +1,19 @@
 <template>
   <div class="hello">
+  <el-container>
+  <el-aside width="200px">
+          <Menu></Menu>
+    </el-aside>
     <el-main>
+
+
+
         <Common :title="loader.title" :updateTime="loader.updateTime" :sums="loader.sums" :tabs="tabs" :activeName_="loader.activeName"
         @handleClickTab="click($event)" />
-    
+
     </el-main>
-    <div style="position: fixed; right: 10px; top: 90px; font-weight: 400; font-family: 宋体 " class="blink">
-        <router-link to="/map">舆情谣言判断器</router-link>
-    </div>
+    </el-container>
+
     
   </div>
 </template>
@@ -16,12 +22,17 @@
 import Common from './Common.vue';
 import Loader from '../js/common.js'
 import {Utils} from "../js/utils";
+import Menu from './Menu.vue'
 export default {
     name: 'Home',
-    components: {Common},
+    components: {Common,Menu},
     props: {
         msg: String
     },
+    beforeCreate () {
+document.querySelector('body').setAttribute('style', 'margin: 0 auto; width: 100%; min-width: 300px; background:#F6F6F6; overflow-x: hidden;height: 100%;');
+        },
+
     data(){
         return{
             title: "国内疫情",
@@ -38,21 +49,17 @@ export default {
                     allTime: 0, data: null, mapName: 'china'
                 },
                 {
-                    label: "省舆情回放", name: 'chinaTime', ids: ['ecChinaTime', 'ecBarTime1'], level: 1, 
+                    label: "全国疫情回放", name: 'chinaTime', ids: ['ecChinaTime', 'ecBarTime1'], level: 1, 
                     allTime: 1, data: null, mapName: "china"
                 },
                 {
-                    label: "省区实时疫情", name: 'province', ids: ['ecProvince', 'ecBar2'], level: 2, 
+                    label: "省实时疫情", name: 'province', ids: ['ecProvince', 'ecBar2'], level: 2, 
                     allTime: 0, data: null, mapName: "420000"
                 },
                 {
-                    label: "时间序列回放", name: 'provinceTime', ids: ['ecProvinceTime', 'ecBarTime2'], 
+                    label: "省市疫情回放", name: 'provinceTime', ids: ['ecProvinceTime', 'ecBarTime2'], 
                     level: 2, allTime: 1, data: null, mapName: '420000'
                 }, 
-                {
-                    label: "曲线分析", name: "lineChina", ids: ['ecLineChina'], level: 1, isLine: 1, 
-                    allTime: 1, data: null, mapName: "china"
-                },
                 {
                     label: "政策舆情时间线", name: "NewsTime", ids: ['ecWordCloud'], level: 1,  isWord: 1,
                     allTime: 1, data: null, mapName: "china"
@@ -63,25 +70,43 @@ export default {
         }
     },
     mounted () {
+        if (Loader.title!=''){
+            console.log(Loader.title+"already");
+
+        }
+        else {
         Loader.init(this.title, this.updateTime, this.sums, this.tabs);//this.title->国内确诊； this.update_time; this.sums->rough numbers; this.tabs 几个栏目
+        this.$store.state.updateTime = this.updateTime;
+        this.$store.state.sums = this.sums;
+        this.$store.state.title = this.title;
         [Loader.level, Loader.code] = [1, "86"];
         Loader.loadSummary(); //更新大致信息
         this.init();
-console.log(this.$store.state);
-console.log("vuex!");
+    }
     },
+    computed: {
+listenstore(){
+return this.$store.state.changableNum;
+}
+},
     methods: {
 	click(index){
-if (index==5) this.$store.state.showFooter= true;
-else this.$store.state.showFooter=false;
-console.log("givechange"+this.$store.state.showFooter);
-Loader.handleClickTab(index);
-},
+        this.$store.state.changableNum=index;
+    if (index==4) this.$store.state.showFooter= true;
+        else this.$store.state.showFooter=false;
+    Loader.handleClickTab(index);
+    },
+
         init () {
-            Loader.activeName = "lineChina";
-            Loader.loadData(this.tabs[4]);
+            Loader.activeName = "china";
+            Loader.loadData(this.tabs[0]);
         }
-  }
+  },
+    watch: {
+        listenstore: function(){
+        }
+    },
+
 }
 </script>
 

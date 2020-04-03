@@ -1,18 +1,19 @@
 <template>
     <div id="root">
 
-
+<el-container>
+  <el-aside width="200px">
+          <Menu></Menu>
+    </el-aside>
+        <el-main>
 <template>
-<input type="text" name ="" id="" placeholder="输入您要鉴别的舆论" v-model="search"/>
-<button @click="btn">搜索</button>
+
   <light-timeline :items='items'></light-timeline>
 </template>
 
-        <div style="position: fixed; right: 10px; top: 90px; font-weight: 400; font-family: 宋体;  " class="blink">
-          
 
-<router-link to="/china">返回</router-link>
-        </div>
+            </el-main>
+</el-container>
     </div>
     
     
@@ -26,11 +27,13 @@
 //import {loadLines3D} from "../js/lines3D";
 import { Utils } from '../js/utils';
 import {API} from "../js/server";
+import Menu from './Menu.vue'
 
  
 
 export default {
     name: 'Map',
+        components: {Menu},
     data () {
 
     return {

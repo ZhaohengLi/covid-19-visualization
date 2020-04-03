@@ -4,7 +4,7 @@ Vue.use(VueRouter);
 
 import China  from './components/China.vue';
 import Map  from './components/Map.vue';
-// import user   from './components/China.vue'
+import Ana  from './components/Ana.vue';
 
 const routes = [
     {
@@ -22,6 +22,10 @@ const routes = [
     {
         path: '/map', 
         component: Map
+    },
+    {
+        path: '/ana', 
+        component: Ana
     },
 ]
 

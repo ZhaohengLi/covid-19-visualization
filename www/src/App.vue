@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <Head></Head>
-    
       <!-- <router-link to="/map">Map</router-link> -->
       <router-view></router-view>
     

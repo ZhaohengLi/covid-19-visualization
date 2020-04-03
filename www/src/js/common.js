@@ -50,8 +50,7 @@ let Loader = {
         let $this = this;
         let [mapName, level, allTime] = [tab.mapName, tab.level, tab.allTime];
         console.log("---load_data---");
-        console.log(tab);
-        if (tab.data) return $this.drawGraph(tab);
+       // if (tab.data) return $this.drawGraph(tab);
         
         let key = allTime ? API.GetTimeData : API.GetDataDetails;
         Utils.ajaxData(key, {'level': level, 'name': mapName}, function (rst) {
@@ -74,14 +73,13 @@ let Loader = {
     
 		if (tab.isWord){
 			console.log("WORD");
-	let ec = chartWord.initData(tab.ids[0]);
+            let ec = chartWord.initData(tab.ids[0]);
             ec.on('click', function (p) {
                 console.log(p);
             });
 				return;
 	}
         // 依次画两图
-        console.log("draw_chartmap");
         let ec = chartMap.initData(data, tab.ids[0], mapName, allTime);
         ec.off('click');
         ec.on('click', function (d) {
@@ -100,10 +98,9 @@ let Loader = {
     // 切换标签页
     handleClickTab: function (index) {
         let tab = this.tabs[index];
-                console.log("click_change");
-                console.log(index);
+            console.log("click_change");
+            console.log(index);
         if (tab.isLine) {
-
             return this.loadData(tab);
         }
         this.loadMap(tab);
