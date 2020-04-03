@@ -184,7 +184,7 @@ def request_news_time_series():
     db = Database()
     update_num = 0
     for line in data:
-        key = ['id', 'provinceId', 'title', 'summary', 'infoSource', 'sourceUrl', 'pubDate']
+        key = ['id', 'provinceId', 'title', 'summary', 'infoSource', 'sourceUrl', 'pubDate', 'province']
         data = db.select("select * from news where id={}".format(line['id']))
         if not data:
             update_num += 1
@@ -193,6 +193,8 @@ def request_news_time_series():
             if line['provinceId'] == "":
                 line['provinceId'] = None
             line['summary'] = line['summary'][0:4096]
+            if 'province' not in line:
+                 line['province'] = None
             params = [line[k] for k in key]
             db.execute(sql, params)
     L.info('Update {} news data.'.format(update_num))
@@ -334,9 +336,9 @@ def request_news_data():
     
 if __name__ == '__main__':
     pass
-    request_data_time_series()
+    # request_data_time_series()
     request_news_time_series()
-    request_rumor_time_series()
+    # request_rumor_time_series()
     # request_rumor_data()
     # request_news_data()
     # test_get_data()

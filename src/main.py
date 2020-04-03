@@ -67,19 +67,29 @@ def get_time_data():
 
 @app.route('/getNewsData')
 def get_news_data():
-    pass
-    data = DC.get_news_data()
-    return NormalResponseJson(request, data)
+    R = request.args
+    province = R.get('province', None)
+    keyword = R.get('keyword', None)
+    date = R.get('pubDate', None)
+    page = R.get('page', None)
+    num = R.get('num', None)
+    data, length = DC.get_news_data(province, keyword, date, page, num)
+    return NormalResponseJson(request, data, length)
+
+@app.route('/getRumorData')
+def get_rumor_data():
+    R = request.args
+    keyword = R.get('keyword', None)
+    type = R.get('rumorType', None)
+    page = R.get('page', None)
+    num = R.get('num', None)
+    data, length = DC.get_rumor_data(keyword, type, page, num)
+    return NormalResponseJson(request, data, length)
 
 @app.route('/testNewsData')
 def test_news_data():
     pass
     data = DC.get_news_data_example()
-    return NormalResponseJson(request, data)
-
-@app.route('/getRumorData')
-def get_rumor_data():
-    data = DC.get_rumor_data()
     return NormalResponseJson(request, data)
 
 @app.route('/testRumorData')
@@ -112,4 +122,4 @@ def get_map():
 if __name__ == '__main__':
     L.info("Server Start...")
     app.run(host="0.0.0.0",port=C.web.PORT, debug=True)
-    
+

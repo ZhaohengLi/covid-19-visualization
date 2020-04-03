@@ -50,11 +50,40 @@ def get_data_summary(level=1, code=86):
     
     return {"updateTime": update_time, "summary": sums}
 
-def get_news_data():
+def get_news_data(province=None, keyword=None, date=None, page=None, num=None):
     db = Database()
+
     sql = "select * from news"
+    has_where = False
+
+    if province:
+        sql += " where summary like '%{}%'".format(province)
+        has_where = True
+
+    if keyword:
+        if has_where:
+            sql += " and summary like '%{}%'".format(keyword)
+        else:
+            sql += " where summary like '%{}%'".format(keyword)
+            has_where = True
+
+    if date:
+        if has_where:
+            sql += " and DATE_FORMAT(pubDate, '%Y%m%d') between '{}' and '20210101' order by pubDate asc ".format(date)
+        else:
+            sql += " where DATE_FORMAT(pubDate, '%Y%m%d') between '{}' and '20210101' order by pubDate asc ".format(date)
+            has_where = True
+    else:
+        sql += " order by pubDate desc"
+
     news = db.selectDict(sql)
-    return news
+
+    if page and num and int(page) > 0 and int(num) > 0:
+        page = int(page)
+        num = int(num)
+        return news[(page-1)*num:page*num], len(news)
+    else:
+        return news[0:10], len(news)
 
 def get_news_data_example():
     db = Database()
@@ -62,11 +91,30 @@ def get_news_data_example():
     news = db.selectDict(sql)
     return news
 
-def get_rumor_data():
+def get_rumor_data(keyword=None, type=None, page=None, num=None):
     db = Database()
     sql = "select * from rumor"
+    has_where = False
+
+    if keyword:
+        sql += " where (mainSummary like '%{}%' or title like '%{}%' or body like '%{}%')".format(keyword, keyword, keyword)
+        has_where = True
+
+    if type and 0 <= int(type) <= 2:
+        if has_where:
+            sql += " and rumorType={}".format(type)
+        else:
+            sql += " where rumorType={}".format(type)
+            has_where = True
+
     rumor = db.selectDict(sql)
-    return rumor
+
+    if page and num and int(page) > 0 and int(num) > 0:
+        page = int(page)
+        num = int(num)
+        return rumor[(page - 1) * num:page * num], len(rumor)
+    else:
+        return rumor[0:10], len(rumor)
 
 def get_rumor_data_example():
     db = Database()

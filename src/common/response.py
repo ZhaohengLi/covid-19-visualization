@@ -27,9 +27,9 @@ def ErrorResponseData(data = {}):
     return json.dumps(data, ensure_ascii = False)
 
 '''请求标准返回格式'''
-def NormalResponseJson(request, data):
-    rst = { 'error': 0, 'code':None, 'message': "请求成功", 'data': data }
-    return json.dumps(rst, ensure_ascii = False)
+def NormalResponseJson(request, data, dataLen=None):
+    rst = { 'error': 0, 'code':None, 'message': "请求成功", 'data': data, 'dataLen': dataLen}
+    return json.dumps(rst, ensure_ascii=False, default=str)
 
 '''请求标准返回格式'''
 def NormalResponse(request, data):
@@ -37,6 +37,7 @@ def NormalResponse(request, data):
     rst = { 'error': False, 'message': "OK", 'data': data }
     
     return callback + "(" + json.dumps(rst, ensure_ascii = False) + ")"
+
 
 
 if __name__ == '__main__':
