@@ -26,7 +26,7 @@ def run():
     while True:
         t = threading.Thread(target=worker)
         t.start()
-        time.sleep(1800)
+        time.sleep(18000)
     
 if __name__ == '__main__':
     run()
