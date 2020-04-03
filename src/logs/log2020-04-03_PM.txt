@@ -1,0 +1,22 @@
+2020-04-03 12:21:23,385 - dxy_record.py[line:174] - INFO: New data lines count:0
+2020-04-03 13:04:02,039 - database.py[line:181] - ERROR: Error: 1366 (HY000): Incorrect integer value: '' for column 'provinceId' at row 1
+2020-04-03 13:04:02,040 - dxy_record.py[line:198] - INFO: Writing database for 4473 news.
+2020-04-03 13:06:45,800 - database.py[line:181] - ERROR: Error: 1292 (22007): Incorrect datetime value: '1585885601124' for column 'crawlTime' at row 1
+2020-04-03 13:06:45,800 - dxy_record.py[line:200] - INFO: Writing database for 4473 news.
+2020-04-03 13:19:12,743 - database.py[line:181] - ERROR: Error: 1062 (23000): Duplicate entry '23630' for key 'news.PRIMARY'
+2020-04-03 13:19:12,743 - dxy_record.py[line:199] - INFO: Writing database for 4473 news.
+2020-04-03 13:23:45,522 - database.py[line:181] - ERROR: Error: 1062 (23000): Duplicate entry '23630' for key 'news.PRIMARY'
+2020-04-03 13:23:45,522 - dxy_record.py[line:199] - INFO: Writing database for 4473 news.
+2020-04-03 13:24:23,818 - database.py[line:181] - ERROR: Error: 1062 (23000): Duplicate entry '23630' for key 'news.PRIMARY'
+2020-04-03 13:24:23,818 - dxy_record.py[line:199] - INFO: Writing database for 4473 news.
+2020-04-03 13:36:28,940 - database.py[line:125] - ERROR: Run Error: insert into news (id,provinceId,title,summary,infoSource,sourceUrl,pubDate) values (%s, %s, %s, %s, %s, %s, %s)
+2020-04-03 13:36:28,940 - database.py[line:126] - ERROR: 1406 (22001): Data too long for column 'summary' at row 1
+2020-04-03 13:36:33,163 - dxy_record.py[line:195] - INFO: Finished news data.
+2020-04-03 13:38:28,677 - database.py[line:125] - ERROR: Run Error: insert into news (id,provinceId,title,summary,infoSource,sourceUrl,pubDate) values (%s, %s, %s, %s, %s, %s, %s)
+2020-04-03 13:38:28,677 - database.py[line:126] - ERROR: 1406 (22001): Data too long for column 'summary' at row 1
+2020-04-03 13:38:30,318 - dxy_record.py[line:197] - INFO: Update 1 news data.
+2020-04-03 13:40:11,246 - dxy_record.py[line:199] - INFO: Update 1 news data.
+2020-04-03 13:51:59,250 - dxy_record.py[line:199] - INFO: Update 4085 news data.
+2020-04-03 13:52:24,217 - dxy_record.py[line:199] - INFO: Update 0 news data.
+2020-04-03 14:01:32,520 - dxy_record.py[line:218] - INFO: Update 176 news data.
+2020-04-03 14:01:41,402 - dxy_record.py[line:218] - INFO: Update 0 news data.
