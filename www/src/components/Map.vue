@@ -3,10 +3,15 @@
 
 
 <template>
+<input type="text" name ="" id="" placeholder="输入您要鉴别的舆论" v-model="search"/>
+<button @click="btn">搜索</button>
   <light-timeline :items='items'></light-timeline>
 </template>
+
         <div style="position: fixed; right: 10px; top: 90px; font-weight: 400; font-family: 宋体;  " class="blink">
-            <router-link to="/china">返回</router-link>
+          
+
+<router-link to="/china">返回</router-link>
         </div>
     </div>
     
@@ -14,12 +19,13 @@
 </template>
 
 <script>
-import {MapCtl, loadPolygon} from "../js/map";
-import {Provinces} from "../js/region";
-import * as maptalks from 'maptalks';
-import {loadBuilding} from "../js/building";
-import {loadLines3D} from "../js/lines3D";
+//import {MapCtl, loadPolygon} from "../js/map";
+//import {Provinces} from "../js/region";
+//import * as maptalks from 'maptalks';
+//import {loadBuilding} from "../js/building";
+//import {loadLines3D} from "../js/lines3D";
 import { Utils } from '../js/utils';
+import {API} from "../js/server";
 
  
 
@@ -28,59 +34,40 @@ export default {
     data () {
 
     return {
-      items: [
-        {
-          tag: '2019-02-12',
-          content: '据人民银行营业管理部介绍,截至3月11日,北京市12家银行已向疫情防控重点企业发放优惠利率贷款306笔,其中中小微企业占比超七成,贷款平均利率2.7%'
-        },
-        {
-          tag: '2019-02-13',
-          type: 'circle',
-          content: '2020年2月12日电,近日,北京市新冠肺炎疫情防控工作新闻发布会上表示,北京市药监局督促药店对购买治疗发热、咳嗽类药品的顾客进行实名登记。'
-        }
-      ]
+    search:'',
+    raw:[],
+      items: [ ]
 };
     },
     mounted () {
-        this.mapIndex = parseInt(Utils.getCookie("mapIndex", 1));
-        this.init();
-        this.loadProvince(this.currentProvince);
+this.init();
+this.det();
+
     },
     methods: {
+        btn(){},
         init () {
-            let mapConfig = MapCtl.getConfig();
-            this.map = new maptalks.Map('map', mapConfig);
-            this.map.on('moveend', MapCtl.handleMapMove);
-        },
-        loadProvince (code) {
-            let $this = this;
-            MapCtl.loadData(code, function (features) {
-                let center = (code in Provinces) ? Provinces[code].cp : null;
-                if (features.features[0]) center = features.features[0].properties.cp;
-                $this.map.setCenter(center);
-                $this.map.setZoom(11);
-                $this.data = features;
-                $this.loadMap($this.mapIndex, features);
+
+ let $this = this;
+          let key = API.GetRumors;
+            Utils.ajaxData(key, {'need':'none'}, function (rst) {
+let i =0;
+	$this.items=rst.data;
+for (i=0;i<rst.data.length;i++){
+$this.items[i]['tag']='2020年3月20日';
+$this.items[i]['content']=rst.data[i].title + rst.data[i]['mainSummary'];
+}
+
+
             });
         },
-        loadMap (idx, features) {
-            let funs = [loadPolygon, loadBuilding, loadLines3D];
-            funs[idx](this.map, features);
-        },
-        resetMap: function (idx) {
-            let item = this.maps[idx];
-            Utils.setCookie("mapStyle", [item.map, item.type].join("_"));
-            Utils.setCookie("mapIndex", idx);
-            this.map.remove();
-            this.map = null;
-            this.init();
-            this.loadMap(idx, this.data);
-        }
+det(){
+
+}
+
     }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 .pageHead {
   height: 100px !important; 

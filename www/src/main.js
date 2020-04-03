@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from './store.js'
 import App from './App.vue'
 
 import echarts from 'echarts'
@@ -16,10 +17,10 @@ Vue.use(LightTimeline);
 
 import router from './router.js';
 Vue.config.productionTip = false
-
 new Vue({
   el: '#app',
   router,
+store,
   render(h){
     return h(App);
   }

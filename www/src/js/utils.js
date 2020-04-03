@@ -24,6 +24,7 @@ Utils.getCookie = function (name, dftValue) {
 Utils.postData = function (key, data, _callbackS, _callbackE, config) {
   data['tk'] = Utils.getCookie('tk');
   data['lc'] = Utils.getCookie('lc');
+
   axios.post('/api/' + key, data, config || {})
     .then(function (rst) {
       if (rst.data.error) {
@@ -40,6 +41,7 @@ Utils.postData = function (key, data, _callbackS, _callbackE, config) {
 Utils.ajaxData = function (key, data, _callbackS, _callbackE) {
   data['tk'] = Utils.getCookie('tk');
   data['lc'] = Utils.getCookie('lc');
+  if (data['need']=='none') data={}
   axios.get('/api/' + key, {params: data})
     .then(function (rst) {
       if (rst.data.error) {

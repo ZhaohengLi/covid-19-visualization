@@ -23,7 +23,6 @@
             </el-row>
         </el-card>
     </div>
-    
     <div style="padding-top: 10px">
         <el-tabs v-model="activeName" @tab-click="handleClickTab">
             <!-- 标签页 -->
@@ -58,17 +57,22 @@
             </el-tab-pane>
         </el-tabs>
     </div>
+<div v-if='ifnews==true'>
+<light-timeline :items='items'></light-timeline>
+</div>
     <div style="height: 20px"></div>
 </div>
 </template>
 
 <script>
 import {Utils} from "../js/utils";
+import {API} from "../js/server";
 
 export default {
     name: 'Common',
     props: {
         title: String,
+
         updateTime: String,
         sums: Array,
         tabs: Array,
@@ -76,16 +80,53 @@ export default {
     },
     data () {
         return {
+ifnews:false,
+            items:[{'tag':'1-2-3','content':'1-2-3'}],
             activeName: '',
             mapHeight: (Utils.getDevice() === 'xs') ? "330px" : "500px"
         }
     },
+computed: {
+listenstore(){
+return this.$store.state.showFooter;
+}
+},
+mounted(){
+this.init();
+},
     watch: {
+listenstore: function(){
+console.log("listen_change"+this.$store.state.showFooter)
+if (this.$store.state.showFooter){
+this.ifnews=true;
+}
+else{
+this.ifnews=false;
+}
+},
         activeName_ (v) {
             this.activeName = v;
+	console.log("changeto:"+v);
         }
     },
     methods: {
+        init(){
+
+ let $this = this;
+          let key = API.GetNews;
+            Utils.ajaxData(key, {'need':'none'}, function (rst) {
+let i =0;
+	$this.items=rst.data;
+for (i=0;i<rst.data.length;i++){
+$this.items[i]['tag']='2020年3月20日';
+$this.items[i]['content']=rst.data[i].title + rst.data[i]['summary'];
+console.log($this.items);
+console.log("valid");
+}
+
+
+            });
+},
         handleClickTab: function (p) {
             this.$emit("handleClickTab", parseInt(p.index));
         }

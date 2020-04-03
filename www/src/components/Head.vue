@@ -4,7 +4,7 @@
       <!-- 开源标识 -->
       <div style="text-align: right; ">
         <span>
-          <a href="https://github.com/simonblowsnow/2019-ncov-vis" style="color: #fff; text-decoration:none">
+          <a href="https://github.com/ZhaohengLi/covid-19-visualization" style="color: #fff; text-decoration:none">
             <img style="margin-bottom: -2px;" src="../assets/github.png" width="18" /> 
             <label style="font-size: 16px"> Github</label>
           </a>
