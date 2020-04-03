@@ -86,16 +86,24 @@ def get_rumor_data():
     data, length = DC.get_rumor_data(keyword, type, page, num)
     return NormalResponseJson(request, data, length)
 
-@app.route('/testNewsData')
-def test_news_data():
-    pass
-    data = DC.get_news_data_example()
+@app.route('/testRumor')
+def test_rumor_data():
+    R = request.args
+    sentence = R.get('sentence', None)
+    data = DC.test_rumor(sentence)
     return NormalResponseJson(request, data)
 
-@app.route('/testRumorData')
-def test_rumor_data():
-    data = DC.get_rumor_data_example()
-    return NormalResponseJson(request, data)
+
+# @app.route('/testNewsData')
+# def test_news_data():
+#     pass
+#     data = DC.get_news_data_example()
+#     return NormalResponseJson(request, data)
+#
+# @app.route('/testRumorData')
+# def test_rumor_data():
+#     data = DC.get_rumor_data_example()
+#     return NormalResponseJson(request, data)
 
 @app.route('/getDataPos')
 def get_data_pos():

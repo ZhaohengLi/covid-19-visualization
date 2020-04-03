@@ -3,12 +3,13 @@
 Created on 2020年2月4日
 '''
 import sys
+from jieba.analyse import textrank
 sys.path.append('..')
 
 from src.libs.database import Database
 from src.data.region import src_province
 from src.libs.utils import date_less
-
+from src.rumor.run import is_rumor
 '''
     地图数据统一格式：
     [code, value, name, ...]
@@ -57,7 +58,10 @@ def get_news_data(province=None, keyword=None, date=None, page=None, num=None):
     has_where = False
 
     if province:
-        sql += " where summary like '%{}%'".format(province)
+        if province == '北京':
+            sql += " where summary like '%北京%' and not like '%北京时间%'"
+        else:
+            sql += " where summary like '%{}%'".format(province)
         has_where = True
 
     if keyword:
@@ -97,8 +101,14 @@ def get_rumor_data(keyword=None, type=None, page=None, num=None):
     has_where = False
 
     if keyword:
-        sql += " where (mainSummary like '%{}%' or title like '%{}%' or body like '%{}%')".format(keyword, keyword, keyword)
-        has_where = True
+        if keyword == '北京':
+            sql += " where (mainSummary like '%北京%' or title like '%北京%' or body like '%北京%') and mainSummary not like '%北京时间%'"
+            has_where = True
+        else:
+            sql += " where (mainSummary like '%{}%' or title like '%{}%' or body like '%{}%')".format(keyword, keyword, keyword)
+            has_where = True
+
+
 
     if type and 0 <= int(type) <= 2:
         if has_where:
@@ -121,7 +131,18 @@ def get_rumor_data_example():
     sql = "select * from rumor limit 0, 20"
     rumor = db.selectDict(sql)
     return rumor
-    
+
+
+def test_rumor(sentence):
+    result = {}
+    result['isRumor'] = is_rumor(sentence)
+    result['related'] = []
+    for keyword, weight in textrank(sentence, topK=3, withWeight=True):
+        for line in get_rumor_data(keyword, page=1, num=2)[0]:
+            result['related'].append(line)
+    return result
+
+
 '''
 Return: {
     '2020-02-09': [code, value, name, ...]
