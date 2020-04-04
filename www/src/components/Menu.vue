@@ -43,6 +43,18 @@
             </el-menu-item>      
   
   
+
+        <el-menu-item index="4">
+
+        <template slot="title">
+          <i class="el-icon-message-solid"></i>
+          <span>新闻搜索</span>
+  
+        </template>
+
+            </el-menu-item>      
+  
+  
     </el-menu>
 
 
@@ -87,6 +99,10 @@
           { console.log("ANA");
             this.$router.push('Ana');
             this.seled=3;}
+        if (key ==4){
+          this.$router.push('News');
+            this.seled=4;}
+        
 
              //   console.log(key+keyPath);
               

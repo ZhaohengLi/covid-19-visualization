@@ -8,7 +8,7 @@ import Vue from 'vue'
 
 let Loader = {
     title: "",
-    updateTime: "",
+    updateTime: "123",
     tabs: [],
     sums: [],
     activeName: 'china',
@@ -20,12 +20,14 @@ let Loader = {
     loadSummary () {
         let $this = this;
         Utils.ajaxData(API.GetDataSummary, {'level': this.level, 'name': this.code}, function (rst) { //update rough info(set by hand is just a start)
-            $this.updateTime = rst.data.updateTime; 
             let _sums = rst.data.summary;
+            $this.updateTime = rst.data.updateTime;
+
             for (let i = 0; i < 4; i++) {
                 if (_sums[0][i]) Vue.set($this.sums[i], 'sum', _sums[0][i]);
-                if (_sums[1][i])Vue.set($this.sums[i], 'add', "+" + _sums[1][i]);
+                if (_sums[1][i]) Vue.set($this.sums[i], 'add', "+" + _sums[1][i]);
             }
+
         });
     },
     // 加载地图类数据，先请求地图轮廓文件
@@ -49,7 +51,6 @@ let Loader = {
     loadData (tab) {
         let $this = this;
         let [mapName, level, allTime] = [tab.mapName, tab.level, tab.allTime];
-        console.log("---load_data---");
        // if (tab.data) return $this.drawGraph(tab);
         
         let key = allTime ? API.GetTimeData : API.GetDataDetails;

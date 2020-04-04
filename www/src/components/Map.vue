@@ -7,7 +7,17 @@
     </el-aside>
         <el-main>
 <template>
+<el-row>
+ <el-col >
+<el-input v-model="keyword"  placeholder="请输入您要查询的关键词">
 
+<i slot="suffix" class="el-input__icon el-icon-search"></i>
+
+ </el-input>
+</el-col>
+
+</el-row>
+ <el-button type="primary" @click="init">一键搜索</el-button>
   <light-timeline :items='items'></light-timeline>
 </template>
 
@@ -37,6 +47,7 @@ export default {
     data () {
 
     return {
+    keyword:'',
     search:'',
     raw:[],
       items: [ ]
@@ -53,11 +64,11 @@ this.det();
 
  let $this = this;
           let key = API.GetRumors;
-            Utils.ajaxData(key, {'need':'none'}, function (rst) {
+            Utils.ajaxData(key, {'keyword':this.keyword}, function (rst) {
 let i =0;
 	$this.items=rst.data;
 for (i=0;i<rst.data.length;i++){
-$this.items[i]['tag']='2020年3月20日';
+$this.items[i]['tag']=rst.data[i]['crawlTime'];
 $this.items[i]['content']=rst.data[i].title + rst.data[i]['mainSummary'];
 }
 
@@ -77,13 +88,16 @@ det(){
   padding-top: 5px !important;
   padding-bottom: 10px !important;
 }
+.f{
+  color:black
+}
 #root {
     height: calc(100% - 115px); 
 }
 a{color: #dd4814}
 .el-input__inner { color: #fff; background-color: #0c2c45}
-.content{color:#fff;width:190px;height:80px;background-color:#051127;border:1px solid #0c2c45}
-.pop_title{float:left;padding-left:10px;width:180px;height:36px;line-height:36px;background:url(../assets/title.png);font-weight:bold;font-size:16px}
+.content{color:#051127;width:190px;height:80px;background-color:#0c2c45;border:1px solid #0c2c45}
+.pop_title{float:left;padding-left:10px;width:180px;height:36px;line-height:36px;background:url(../assets/title.png);font-weight:bold;font-size:24px}
 .pop_dept{float:left;padding:12px 5px;line-height:15px;text-align:center;margin:0 10px}
 .pop_arrow{float:left;width:15px;height:24px;line-height:24px;background:url(../assets/arrow.png) no-repeat center center}
 .arrow{display:block;width:17px;height:10px;background:url(../assets/em.png) no-repeat;position:absolute;left:50%;margin-left:-5px;bottom:-10px}

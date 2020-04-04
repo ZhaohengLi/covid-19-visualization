@@ -46,8 +46,6 @@ export default {
 
     props: {
         title: String,
-
-        updateTime: String,
         sums: Array,
         tabs: Array,
         activeName_: String

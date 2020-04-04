@@ -36,7 +36,7 @@ document.querySelector('body').setAttribute('style', 'margin: 0 auto; width: 100
     data(){
         return{
             title: "国内疫情",
-            updateTime: '2020.02.15 02:29',
+            updateTime: "111",
             sums: [
                 {name: 'confirmed', text: '确诊', color: Utils.Colors[0], sum: 63951, add: "+19"},
                 {name: 'suspected', text: '疑似', color: Utils.Colors[1], sum: 8228 , add: "+10"},
@@ -75,12 +75,15 @@ document.querySelector('body').setAttribute('style', 'margin: 0 auto; width: 100
 
         }
         else {
-        Loader.init(this.title, this.updateTime, this.sums, this.tabs);//this.title->国内确诊； this.update_time; this.sums->rough numbers; this.tabs 几个栏目
-        this.$store.state.updateTime = this.updateTime;
+
+        Loader.init(this.title, this.updateTime, this.sums, this.tabs);
+
+        Loader.loadSummary(); //更新大致信息
+
         this.$store.state.sums = this.sums;
         this.$store.state.title = this.title;
         [Loader.level, Loader.code] = [1, "86"];
-        Loader.loadSummary(); //更新大致信息
+
         this.init();
     }
     },

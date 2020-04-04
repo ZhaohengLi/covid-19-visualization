@@ -64,20 +64,20 @@ export default {
     },
 
 mounted(){
-
-this.updateTime = this.$store.state.updateTime;
+let pd = new Date();
+this.updateTime=pd.getFullYear() + "年" + (pd.getMonth() + 1) + "月" + pd.getDate()+'日     ';
 this.sums = this.$store.state.sums;
 },
 
 computed: {
 listenstore(){
-return this.$store.state.updateTime;
+return this.$store.state.sums;
 }
 },
 
     watch: {
 listenstore: function(){
-this.updateTime = this.$store.state.updateTime;
+//this.updateTime = this.$store.state.updateTime;
 this.sums = this.$store.state.sums;
 },
 
