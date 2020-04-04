@@ -59,7 +59,7 @@ def get_news_data(province=None, keyword=None, date=None, page=None, num=None):
 
     if province:
         if province == '北京':
-            sql += " where summary like '%北京%' and not like '%北京时间%'"
+            sql += " where summary not like '%北京时间%' and summary like '%北京%'"
         else:
             sql += " where summary like '%{}%'".format(province)
         has_where = True
@@ -102,7 +102,7 @@ def get_rumor_data(keyword=None, type=None, page=None, num=None):
 
     if keyword:
         if keyword == '北京':
-            sql += " where (mainSummary like '%北京%' or title like '%北京%' or body like '%北京%') and mainSummary not like '%北京时间%'"
+            sql += " where mainSummary not like '%北京时间%' and (mainSummary like '%北京%' or title like '%北京%' or body like '%北京%')"
             has_where = True
         else:
             sql += " where (mainSummary like '%{}%' or title like '%{}%' or body like '%{}%')".format(keyword, keyword, keyword)
