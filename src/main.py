@@ -90,6 +90,8 @@ def get_rumor_data():
 def test_rumor_data():
     R = request.args
     sentence = R.get('sentence', None)
+    if not sentence:
+        return ErrorResponseJson("参数不正确")
     data = DC.test_rumor(sentence)
     return NormalResponseJson(request, data)
 

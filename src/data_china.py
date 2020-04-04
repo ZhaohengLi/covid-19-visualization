@@ -108,8 +108,6 @@ def get_rumor_data(keyword=None, type=None, page=None, num=None):
             sql += " where (mainSummary like '%{}%' or title like '%{}%' or body like '%{}%')".format(keyword, keyword, keyword)
             has_where = True
 
-
-
     if type and 0 <= int(type) <= 2:
         if has_where:
             sql += " and rumorType={}".format(type)
@@ -134,6 +132,8 @@ def get_rumor_data_example():
 
 
 def test_rumor(sentence):
+    if not sentence:
+        return None
     result = {}
     result['isRumor'] = is_rumor(sentence)
     result['related'] = []
