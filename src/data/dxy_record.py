@@ -8,7 +8,9 @@ sys.path.append('..')
 sys.path.append('../..')
 import json
 import time
+import zipfile
 import traceback
+import urllib.request
 from src.libs.log import L
 from urllib import parse
 from src.common.tools import request_url
@@ -259,14 +261,8 @@ def request_data_time_series():
         if p['name'] == '台湾省':
             needed['台湾'] = p
         needed[p['name']] = p
-    
-    # url = "https://raw.githubusercontent.com/BlankerL/DXY-COVID-19-Data/master/json/DXYArea-TimeSeries.json"
-    # data = request_data(url, "")
-    # if not data:
-    #     L.info('Get data from github fialed.')
-    #     return
 
-    with open('./json/data_time_series.json', 'r') as file:
+    with open('./json/DXYArea-TimeSeries.json', 'r') as file:
         data = json.load(file)
 
     db = Database()
@@ -298,7 +294,7 @@ def request_data_time_series():
 def request_news_time_series():
     L.info("Start update news time series.")
 
-    with open('./json/news_time_series.json', 'r') as file:
+    with open('./json/DXYNews-TimeSeries.json', 'r') as file:
         data = json.load(file)
     L.info("\tRead {} lines from file".format(len(data)))
 
@@ -323,7 +319,7 @@ def request_news_time_series():
 
 def request_rumor_time_series():
     L.info("Start update rumor time series.")
-    with open('./json/rumor_time_series.json', 'r') as file:
+    with open('./json/DXYRumors-TimeSeries.json', 'r') as file:
         data = json.load(file)
     L.info("\tRead {} lines from file".format(len(data)))
     db = Database()
@@ -341,9 +337,20 @@ def request_rumor_time_series():
             db.execute(sql, params)
     L.info('\tUpdate {} rumor data.'.format(update_num))
 
-    
+
+def get_series_file():
+    urls = {"DXYRumors-TimeSeries.json":"http://downgit.zhoudaxiaa.com/#/home?url=https://github.com/BlankerL/DXY-COVID-19-Data/blob/master/json/DXYRumors-TimeSeries.json",
+           "DXYArea-TimeSeries.json":"http://downgit.zhoudaxiaa.com/#/home?url=https://github.com/BlankerL/DXY-COVID-19-Data/blob/master/json/DXYArea-TimeSeries.json",
+           "DXYNews-TimeSeries.json":"http://downgit.zhoudaxiaa.com/#/home?url=https://github.com/BlankerL/DXY-COVID-19-Data/blob/master/json/DXYNews-TimeSeries.json"}
+    for name in urls:
+        file, _ = urllib.request.urlretrieve(urls[name], name+'.zip')
+        with zipfile.ZipFile(file, 'r') as zip:
+            zip.extractall(name)
+
+
 if __name__ == '__main__':
     pass
+    # get_series_file()
     request_data_time_series()
     request_news_time_series()
     request_rumor_time_series()
