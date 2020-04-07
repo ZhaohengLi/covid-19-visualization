@@ -124,6 +124,18 @@ def get_rumor_data(keyword=None, type=None, page=None, num=None):
     else:
         return rumor[0:10], len(rumor)
 
+
+def get_topic(date):
+    sql = ''
+    if date:
+        sql = "select date, topic from topic where DATE_FORMAT(date, '%Y%m%d') ='{}'".format(date)
+    else:
+        sql = "select date, topic from topic order by date desc"
+    db = Database()
+    data = db.select(sql)
+    return data
+
+
 def get_rumor_data_example():
     db = Database()
     sql = "select * from rumor limit 0, 20"

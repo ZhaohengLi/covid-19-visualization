@@ -9,6 +9,8 @@ sys.path.append('../..')
 import json
 import time
 import zipfile
+import datetime
+from jieba.analyse import textrank
 import traceback
 import urllib.request
 from src.libs.log import L
@@ -338,6 +340,35 @@ def request_rumor_time_series():
     L.info('\tUpdate {} rumor data.'.format(update_num))
 
 
+def generate_topics():
+    L.info("Start update topic.")
+    db = Database()
+    db.run("delete from topic")
+    data = db.select("select pubDate, summary from news order by pubDate asc")
+    now = datetime.date(2019, 12, 31)
+    news = ""
+    topic = {}
+    sql = "insert into topic (date, topic) values (%s, %s)"
+
+    for line in data:
+        if line[0].date() == now:
+            news += line[1]
+        else:
+            topic.clear()
+            for keyword, weight in textrank(news, topK=20, withWeight=True):
+                topic[keyword] = weight
+            db.execute(sql, [now.strftime("%Y-%m-%d %H:%M:%S"), str(topic)])
+            L.info("\tNow processing {}".format(now.strftime("%Y-%m-%d")))
+            now = line[0].date()
+            news = line[1]
+
+    topic.clear()
+    for keyword, weight in textrank(news, topK=20, withWeight=True):
+        topic[keyword] = weight
+    db.execute(sql, [now.strftime("%Y-%m-%d %H:%M:%S"), str(topic)])
+    L.info("\tFinished update topic.")
+
+
 def get_series_file():
     urls = {"DXYRumors-TimeSeries.json":"http://downgit.zhoudaxiaa.com/#/home?url=https://github.com/BlankerL/DXY-COVID-19-Data/blob/master/json/DXYRumors-TimeSeries.json",
            "DXYArea-TimeSeries.json":"http://downgit.zhoudaxiaa.com/#/home?url=https://github.com/BlankerL/DXY-COVID-19-Data/blob/master/json/DXYArea-TimeSeries.json",
@@ -354,6 +385,8 @@ if __name__ == '__main__':
     request_data_time_series()
     request_news_time_series()
     request_rumor_time_series()
+    generate_topics()
+
     # request_rumor_data()
     # request_news_data()
     # test_get_data()

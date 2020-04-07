@@ -96,6 +96,14 @@ def test_rumor_data():
     return NormalResponseJson(request, data)
 
 
+@app.route('/getTopic')
+def get_topic():
+    R = request.args
+    date = R.get('date', None)
+    data = DC.get_topic(date)
+    return NormalResponseJson(request, data, len(data))
+
+
 # @app.route('/testNewsData')
 # def test_news_data():
 #     pass
@@ -127,6 +135,7 @@ def get_map():
     with open(path, encoding='utf8') as fp:
         data = ''.join(fp.readlines())
         return NormalResponseJson(request, data)
+
     
     
 if __name__ == '__main__':
