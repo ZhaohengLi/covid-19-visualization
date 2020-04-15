@@ -107,7 +107,7 @@ def request_data(url, name):
 '''    
 def request_data_province():
     names = {'香港特别行政区': '香港', '澳门特别行政区': '澳门', '台湾省': '台湾'}
-    url = "https://lab.isaaclin.cn/nCoV/api/area?latest=0&province="
+    url = "https://lab.isaaclin.cn/nCoV/api/area?latest=1&province="
     db = Database()
     history = getLatest(db)
     idx = 0
@@ -266,6 +266,7 @@ def request_data_time_series():
 
     with open('./json/DXYArea-TimeSeries.json', 'r') as file:
         data = json.load(file)
+
 
     db = Database()
     history = getLatest(db)
