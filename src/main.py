@@ -23,11 +23,31 @@ app.config['TOKEN_EXPIRATION'] = 86400
 BASE_DIR = os.path.abspath(os.path.dirname(__file__)) + "/static/upload/"
 FILE_PATH = os.path.dirname(__file__) + "/"
 
+count_file = "./logs/count.txt"
+
+
+def read_count():
+    with open(count_file, 'r') as file:
+        return int(file.read())
+
+
+def add_count():
+    with open(count_file, 'w') as file:
+        file.write(str(read_count()+1))
+
+
+@app.route('/getCount')
+def get_count():
+    data = dict()
+    data['count'] = read_count()
+    return NormalResponseJson(request, data)
 
 
 @app.route('/')
 def index():
+    add_count()
     return "Welcome..."
+
 
 @app.route('/test')
 def test(r):
@@ -38,6 +58,7 @@ def test(r):
 
 @app.route('/getDataSummary')
 def get_data_summary():
+    add_count()
     R = request.form if request.method=='POST' else request.args
     level = int(R.get('level', 1))
     code = R.get('name', '86')
@@ -48,6 +69,7 @@ def get_data_summary():
 
 @app.route('/getDataDetails')
 def get_data_details():
+    add_count()
     R = request.form if request.method=='POST' else request.args
     level = int(R.get('level', 1))
     code = R.get('name', '')
@@ -57,6 +79,7 @@ def get_data_details():
 
 @app.route('/getTimeData')
 def get_time_data():
+    add_count()
     R = request.form if request.method=='POST' else request.args
     level = int(R.get('level', 1))
     code = R.get('name', '86')
@@ -67,6 +90,7 @@ def get_time_data():
 
 @app.route('/getNewsData')
 def get_news_data():
+    add_count()
     R = request.args
     province = R.get('province', None)
     keyword = R.get('keyword', None)
@@ -78,6 +102,7 @@ def get_news_data():
 
 @app.route('/getRumorData')
 def get_rumor_data():
+    add_count()
     R = request.args
     keyword = R.get('keyword', None)
     type = R.get('rumorType', None)
@@ -88,6 +113,7 @@ def get_rumor_data():
 
 @app.route('/testRumor')
 def test_rumor_data():
+    add_count()
     R = request.args
     sentence = R.get('sentence', None)
     if not sentence:
@@ -98,6 +124,7 @@ def test_rumor_data():
 
 @app.route('/getTopic')
 def get_topic():
+    add_count()
     R = request.args
     date = R.get('date', None)
     data = DC.get_topic(date)
@@ -117,6 +144,7 @@ def get_topic():
 
 @app.route('/getDataPos')
 def get_data_pos():
+    add_count()
     R = request.form if request.method=='POST' else request.args
     code = R.get('code', '420000')
     
