@@ -28,19 +28,20 @@ count_file = "./logs/count.txt"
 
 def read_count():
     with open(count_file, 'r') as file:
-        return int(file.read())
+        return int(file.read().strip())
 
 
 def add_count():
+    old = read_count()
     with open(count_file, 'w') as file:
-        file.write(str(read_count()+1))
+        file.write(str(old+1))
 
 
 @app.route('/getCount')
 def get_count():
     data = dict()
     data['count'] = read_count()
-    return NormalResponseJson(request, data)
+    return str(data)
 
 
 @app.route('/')
