@@ -15,6 +15,7 @@ from src.common.response import NormalResponseJson, NormalResponse, ErrorRespons
 
 import src.data_china as DC
 import src.data_pos as DP
+import json
 
 app = Flask(__name__, static_url_path='')
 CORS(app, supports_credentials=True)
@@ -24,7 +25,7 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__)) + "/static/upload/"
 FILE_PATH = os.path.dirname(__file__) + "/"
 
 count_file = "./logs/count.txt"
-
+rumor_user_file = "./logs/rumor_user.json"
 
 def read_count():
     with open(count_file, 'r') as file:
@@ -120,6 +121,21 @@ def test_rumor_data():
     if not sentence:
         return ErrorResponseJson("参数不正确")
     data = DC.test_rumor(sentence)
+
+    rumor_user_list = read_rumor_user()
+    had = False
+    for i in rumor_user_list:
+        if sentence == i["info"]:
+            had = True
+            break
+    if not had:
+        item = dict()
+        item["id"] = len(rumor_user_list)
+        item["info"] = sentence
+        item["url"] = ""
+        rumor_user_list.append(item)
+        write_rumor_user(rumor_user_list)
+
     return NormalResponseJson(request, data)
 
 
@@ -142,6 +158,36 @@ def get_topic():
 # def test_rumor_data():
 #     data = DC.get_rumor_data_example()
 #     return NormalResponseJson(request, data)
+
+@app.route('/getInfoUser', methods=['POST', 'GET'])
+def get_rumor_user():
+    add_count()
+    if request.method == 'POST':
+        R = request.form
+        id = R.get("id", None)
+        url = R.get("url", None)
+        if id and url:
+            rumor_user_list = read_rumor_user()
+            if int(id) < len(rumor_user_list):
+                rumor_user_list[int(id)]["url"] = url
+                write_rumor_user(rumor_user_list)
+                return NormalResponseJson(request, rumor_user_list[int(id)])
+
+    if request.method == "GET":
+        rumor_user_list = read_rumor_user()
+        return NormalResponseJson(request, rumor_user_list)
+
+
+def read_rumor_user():
+    with open(rumor_user_file, 'r') as file:
+        rumor_user_list = json.load(file)
+        return rumor_user_list
+
+
+def write_rumor_user(rumor_user_list):
+    with open(rumor_user_file, 'w') as file:
+        json.dump(rumor_user_list, file)
+
 
 @app.route('/getDataPos')
 def get_data_pos():

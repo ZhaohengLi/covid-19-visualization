@@ -10,6 +10,7 @@ import json
 import time
 import zipfile
 import datetime
+import pymysql
 from jieba.analyse import textrank
 import traceback
 import urllib.request
@@ -349,6 +350,56 @@ def generate_topics():
     now = datetime.date(2019, 12, 31)
     news = ""
     topic = {}
+    yesterday = []
+    dead = []
+    new = []
+    sql = "insert into topic (date, topic, dead, new) values (%s, %s, %s, %s)"
+
+    for line in data:
+        if line[0].date() == now:
+            news += line[1]
+        else:
+            topic.clear()
+            for keyword, weight in textrank(news, topK=40, withWeight=True):
+                topic[keyword] = weight
+            for keyword in topic.keys():
+                if keyword not in yesterday:
+                    new.append(keyword)
+            for keyword in yesterday:
+                if keyword not in topic.keys():
+                    dead.append(keyword)
+            db.execute(sql, [now.strftime("%Y-%m-%d %H:%M:%S"), str(topic), str(dead), str(new)])
+            L.info("\tNow processing {}".format(now.strftime("%Y-%m-%d")))
+            now = line[0].date()
+            news = line[1]
+            yesterday = topic.keys()
+            new.clear()
+            dead.clear()
+
+    topic.clear()
+    for keyword, weight in textrank(news, topK=20, withWeight=True):
+        topic[keyword] = weight
+    for keyword in topic.keys():
+        if keyword not in yesterday:
+            new.append(keyword)
+    for keyword in yesterday:
+        if keyword not in topic.keys():
+            dead.append(keyword)
+    db.execute(sql, [now.strftime("%Y-%m-%d %H:%M:%S"), str(topic)])
+    L.info("\tFinished update topic.")
+
+
+def generate_weibo_topics():
+    L.info("Start update weibo topic.")
+    db_weibo = pymysql.connect("localhost", "root", "root", "weibo")
+    cursor = db_weibo.cursor()
+    cursor.execute("select publish_time, content from weibo order by publish_time asc")
+    data = cursor.fetchall()
+
+    db = Database()
+    now = datetime.date(2019, 12, 31)
+    news = ""
+    topic = {}
     sql = "insert into topic (date, topic) values (%s, %s)"
 
     for line in data:
@@ -367,7 +418,7 @@ def generate_topics():
     for keyword, weight in textrank(news, topK=20, withWeight=True):
         topic[keyword] = weight
     db.execute(sql, [now.strftime("%Y-%m-%d %H:%M:%S"), str(topic)])
-    L.info("\tFinished update topic.")
+    L.info("\tFinished update weibo topic.")
 
 
 def get_series_file():
@@ -387,6 +438,7 @@ if __name__ == '__main__':
     request_news_time_series()
     request_rumor_time_series()
     generate_topics()
+    generate_weibo_topics()
 
     # request_rumor_data()
     # request_news_data()
