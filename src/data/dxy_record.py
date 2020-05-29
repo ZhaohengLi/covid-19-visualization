@@ -385,7 +385,7 @@ def generate_topics():
     for keyword in yesterday:
         if keyword not in topic.keys():
             dead.append(keyword)
-    db.execute(sql, [now.strftime("%Y-%m-%d %H:%M:%S"), str(topic)])
+    db.execute(sql, [now.strftime("%Y-%m-%d %H:%M:%S"), str(topic), str(dead), str(new)])
     L.info("\tFinished update topic.")
 
 

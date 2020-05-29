@@ -128,9 +128,9 @@ def get_rumor_data(keyword=None, type=None, page=None, num=None):
 def get_topic(date):
     sql = ''
     if date:
-        sql = "select date, topic from topic where DATE_FORMAT(date, '%Y%m%d') ='{}'".format(date)
+        sql = "select date, topic, new, dead from topic where DATE_FORMAT(date, '%Y%m%d') ='{}'".format(date)
     else:
-        sql = "select date, topic from topic order by date desc"
+        sql = "select date, topic, new, dead from topic order by date desc"
     db = Database()
     data = db.select(sql)
     return data
