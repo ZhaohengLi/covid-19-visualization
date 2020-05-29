@@ -172,6 +172,8 @@ def get_rumor_user():
                 rumor_user_list[int(id)]["url"] = url
                 write_rumor_user(rumor_user_list)
                 return NormalResponseJson(request, rumor_user_list[int(id)])
+        else:
+            return ErrorResponseJson()
 
     if request.method == "GET":
         rumor_user_list = read_rumor_user()
