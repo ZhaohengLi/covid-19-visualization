@@ -350,6 +350,7 @@ def generate_topics():
     now = datetime.date(2019, 12, 31)
     news = ""
     topic = {}
+    today = []
     yesterday = []
     dead = []
     new = []
@@ -360,30 +361,34 @@ def generate_topics():
             news += line[1]
         else:
             topic.clear()
+            today.clear()
             for keyword, weight in textrank(news, topK=40, withWeight=True):
                 topic[keyword] = weight
-            for keyword in topic.keys():
+                today.append(keyword)
+            for keyword in today:
                 if keyword not in yesterday:
                     new.append(keyword)
             for keyword in yesterday:
-                if keyword not in topic.keys():
+                if keyword not in today:
                     dead.append(keyword)
             db.execute(sql, [now.strftime("%Y-%m-%d %H:%M:%S"), str(topic), str(dead), str(new)])
             L.info("\tNow processing {}".format(now.strftime("%Y-%m-%d")))
             now = line[0].date()
             news = line[1]
-            yesterday = topic.keys()
+            yesterday = today.copy()
             new.clear()
             dead.clear()
 
     topic.clear()
+    today.clear()
     for keyword, weight in textrank(news, topK=20, withWeight=True):
         topic[keyword] = weight
-    for keyword in topic.keys():
+        today.append(keyword)
+    for keyword in today:
         if keyword not in yesterday:
             new.append(keyword)
     for keyword in yesterday:
-        if keyword not in topic.keys():
+        if keyword not in today:
             dead.append(keyword)
     db.execute(sql, [now.strftime("%Y-%m-%d %H:%M:%S"), str(topic), str(dead), str(new)])
     L.info("\tFinished update topic.")
