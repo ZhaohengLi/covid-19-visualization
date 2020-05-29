@@ -434,11 +434,11 @@ def get_series_file():
 if __name__ == '__main__':
     pass
     # get_series_file()
-    request_data_time_series()
-    request_news_time_series()
-    request_rumor_time_series()
+    # request_data_time_series()
+    # request_news_time_series()
+    # request_rumor_time_series()
     generate_topics()
-    generate_weibo_topics()
+    # generate_weibo_topics()
 
     # request_rumor_data()
     # request_news_data()
