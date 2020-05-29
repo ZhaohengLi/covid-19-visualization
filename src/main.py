@@ -159,11 +159,20 @@ def get_topic():
 #     data = DC.get_rumor_data_example()
 #     return NormalResponseJson(request, data)
 
-@app.route('/getInfoUser', methods=['POST', 'GET'])
+@app.route('/getInfoUser', methods=['GET'])
 def get_rumor_user():
     add_count()
-    if request.method == 'POST':
-        R = request.form
+    if request.method == "GET":
+        rumor_user_list = read_rumor_user()
+        return NormalResponseJson(request, rumor_user_list)
+    return ErrorResponseJson()
+
+
+@app.route('/setInfoUser', methods=['GET'])
+def set_rumor_user():
+    add_count()
+    if request.method == 'GET':
+        R = request.args
         id = R.get("id", None)
         url = R.get("url", None)
         if id and url:
@@ -172,13 +181,7 @@ def get_rumor_user():
                 rumor_user_list[int(id)]["url"] = url
                 write_rumor_user(rumor_user_list)
                 return NormalResponseJson(request, rumor_user_list[int(id)])
-        else:
-            return ErrorResponseJson()
-
-    if request.method == "GET":
-        rumor_user_list = read_rumor_user()
-        return NormalResponseJson(request, rumor_user_list)
-
+    return ErrorResponseJson()
 
 def read_rumor_user():
     with open(rumor_user_file, 'r') as file:
